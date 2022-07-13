@@ -13,6 +13,7 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.List;
 
 @Component
@@ -44,6 +45,9 @@ public class UtellyClient {
 
         HttpEntity<UtellyResponse> response = restTemplate.exchange(url, HttpMethod.GET, entity, UtellyResponse.class);
         UtellyResponse uResponse = response.getBody();
-        return uResponse.getLocations().getWatchList();
+        if (uResponse == null)
+            return new ArrayList<>();
+        else
+            return uResponse.getLocations().getWatchList();
     }
 }
