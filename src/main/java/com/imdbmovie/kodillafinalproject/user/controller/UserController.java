@@ -8,6 +8,7 @@ import com.imdbmovie.kodillafinalproject.exceptions.UserNotFoundException;
 import com.imdbmovie.kodillafinalproject.user.mapper.UserMapper;
 import com.imdbmovie.kodillafinalproject.user.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -24,9 +25,9 @@ public class UserController {
     private final IMBDClient imbdClient;
 
 
-    @GetMapping("/all-users/{username}")
-    public ResponseEntity<List<UserDto>> getAllUsersByName(@PathVariable String username) {
-        List<User> users = userService.getUserByName(username);
+    @GetMapping("/all-users/{name}")
+    public ResponseEntity<List<UserDto>> getAllUsersByName(@PathVariable String name) {
+        List<User> users = userService.getUserByName(name);
         return ResponseEntity.ok(userMapper.mapToUserDtoList(users));
     }
 
@@ -44,18 +45,18 @@ public class UserController {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping(value = "{userId}")
+    @GetMapping(value = "/{userId}")
     public ResponseEntity<UserDto> getUser(@PathVariable Long userId) throws UserNotFoundException {
         return ResponseEntity.ok(userMapper.mapToUserDto(userService.getUserById(userId)));
     }
 
-    @DeleteMapping(value = "delete/{userId}")
+    @DeleteMapping(value = "/delete/{userId}")
     public ResponseEntity<Void> deleteUser(@PathVariable Long userId) throws UserNotFoundException {
         userService.deleteUser(userId);
         return ResponseEntity.ok().build();
     }
 
-    @PutMapping(value = "{userId}/addFriend/{friendId}")
+    @PutMapping(value = "/{userId}/addFriend/{friendId}")
     public ResponseEntity<Void> addFriend(@PathVariable Long userId, @PathVariable Long friendId) throws UserNotFoundException {
         userService.addFriend(userId, friendId);
         return ResponseEntity.ok().build();
@@ -66,13 +67,13 @@ public class UserController {
         return ResponseEntity.ok(userMapper.mapToUserDtoList(userService.findUserFriends(userId)));
     }
 
-    @PutMapping(value = "{userId}/addMovieToFav/{movieId}")
+    @PutMapping(value = "/{userId}/addMovieToFav/{movieId}")
     public ResponseEntity<Void> addMovieToFavorite(@PathVariable Long userId, @PathVariable String movieId) throws UserNotFoundException {
         userService.addMovieToFavorite(userId, movieId);
         return ResponseEntity.ok().build();
     }
 
-    @PutMapping(value = "{userId}/addMovieToWatch/{movieId}")
+    @PutMapping(value = "/{userId}/addMovieToWatch/{movieId}")
     public ResponseEntity<Void> addMovieToWatch(@PathVariable Long userId, @PathVariable String movieId) throws UserNotFoundException {
         userService.addMovieToFWatch(userId, movieId);
         return ResponseEntity.ok().build();

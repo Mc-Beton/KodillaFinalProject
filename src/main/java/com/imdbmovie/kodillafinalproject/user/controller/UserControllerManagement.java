@@ -25,6 +25,4 @@ public class UserControllerManagement {
         List<User> users = userService.getAllUsers();
         return ResponseEntity.ok(userMapper.mapToUserDtoList(users));
     }
-
-
 }
