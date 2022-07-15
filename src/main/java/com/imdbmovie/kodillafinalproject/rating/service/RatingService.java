@@ -54,10 +54,17 @@ public class RatingService {
     }
 
     public AverageRating getAvgRatingOfMovie(String movieId) {
-        return averageRepository.findByMovieId(movieId);
+        if (averageRepository.findByMovieId(movieId).isPresent())
+            return averageRepository.findByMovieId(movieId).get();
+        else
+            return new AverageRating(movieId, 0.0);
     }
 
     public AverageRating saveNewCalculation(AverageRating averageRating) {
         return averageRepository.save(averageRating);
+    }
+
+    public void clearAvgRatings() {
+        averageRepository.deleteAll();
     }
 }

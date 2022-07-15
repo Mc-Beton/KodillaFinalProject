@@ -92,7 +92,7 @@ public class IMBDClient {
 
     public List<ImdbMovieDto> getUserMovieList(Set<String> movies) {
         List<ImdbMovieDto> movieList = new ArrayList<>();
-        movies.stream()
+        movies
                 .forEach(m -> {
                     URI url = UriComponentsBuilder
                             .fromHttpUrl(imbdApiEndpoint +"Title/" + imbdKey + "/" + m)

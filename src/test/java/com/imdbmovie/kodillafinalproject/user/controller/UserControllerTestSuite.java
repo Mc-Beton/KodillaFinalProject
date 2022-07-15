@@ -3,6 +3,7 @@ package com.imdbmovie.kodillafinalproject.user.controller;
 import com.google.gson.Gson;
 import com.imdbmovie.kodillafinalproject.imdbMovie.client.IMBDClient;
 import com.imdbmovie.kodillafinalproject.imdbMovie.config.CoreConfiguration;
+import com.imdbmovie.kodillafinalproject.imdbMovie.domain.ImdbMovieDto;
 import com.imdbmovie.kodillafinalproject.user.domain.User;
 import com.imdbmovie.kodillafinalproject.user.domain.UserDto;
 import com.imdbmovie.kodillafinalproject.user.mapper.UserMapper;
@@ -19,7 +20,10 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
@@ -118,5 +122,78 @@ class UserControllerTestSuite {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.id", Matchers.is(1)))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.name", Matchers.is("name")));
+    }
+
+    @Test
+    void updateUserTest() throws Exception {
+        //Given
+        UserDto userDto = new UserDto(1L, "name", "surname1", "username", "password", "24321545", "asdfadsg");
+        User users = new User.UserBuilder()
+                .id(1L)
+                .name("name")
+                .surname("surname1")
+                .username("username")
+                .password("password")
+                .phoneNumber("24321545")
+                .email("asdfadsg")
+                .build();
+
+        Gson gson = new Gson();
+        String jsonContent = gson.toJson(userDto);
+
+        when(mapper.mapToUserWithId(userDto)).thenReturn(users);
+        when(service.saveNewUser(users)).thenReturn(users);
+
+        //When & Then
+        mockMvc.perform(MockMvcRequestBuilders
+                        .put("/user")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .characterEncoding("UTF-8")
+                        .content(jsonContent))
+                .andExpect(MockMvcResultMatchers.status().is(200));
+    }
+
+    @Test
+    void getFavoriteListTest() throws Exception {
+        //Given
+        List<ImdbMovieDto> movieListDto = List.of(new ImdbMovieDto("tt123456", "title", "image", "2000"));
+
+        Set<String> movieList = new HashSet<>();
+
+        when(service.getFavMovieList(1L)).thenReturn(movieList);
+        when(imbdClient.getUserMovieList(movieList)).thenReturn(movieListDto);
+        //When&Then
+        mockMvc.perform(MockMvcRequestBuilders
+                        .get("/user/1/favoriteList")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(1)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].id", Matchers.is("tt123456")));
+    }
+
+    @Test
+    void getToWatchListTest() throws Exception {
+        //Given
+        List<ImdbMovieDto> movieListDto = List.of(new ImdbMovieDto("tt123456", "title", "image", "2000"));
+
+        Set<String> movieList = new HashSet<>();
+
+        when(service.getFavMovieList(1L)).thenReturn(movieList);
+        when(imbdClient.getUserMovieList(movieList)).thenReturn(movieListDto);
+        //When&Then
+        mockMvc.perform(MockMvcRequestBuilders
+                        .get("/user/1/toWatchList")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(1)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].id", Matchers.is("tt123456")));
+    }
+
+    @Test
+    void deleteTaskTest() throws Exception {
+        //Given
+        //When & Then
+        mockMvc.perform(MockMvcRequestBuilders
+                        .delete("/user/delete/1")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().is(200));
     }
 }

@@ -12,20 +12,20 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/posts/")
+@RequestMapping("/posts")
 @RequiredArgsConstructor
 public class PostController {
 
     private final PostService postService;
     private final PostMapper postMapper;
 
-    @GetMapping("all")
+    @GetMapping("/all")
     public ResponseEntity<List<PostDto>> getPostList() {
         List<Post> postList = postService.getAllPosts();
         return ResponseEntity.ok(postMapper.mapToPostDtoList(postList));
     }
 
-    @GetMapping("{movieId}")
+    @GetMapping("/{movieId}")
     public ResponseEntity<List<PostDto>> getMoviePostList(@PathVariable String movieId) {
         List<Post> postList = postService.getPostsForMovie(movieId);
         return ResponseEntity.ok(postMapper.mapToPostDtoList(postList));
@@ -38,7 +38,7 @@ public class PostController {
         return ResponseEntity.ok().build();
     }
 
-    @DeleteMapping("delete/{postId}")
+    @DeleteMapping("/delete/{postId}")
     public ResponseEntity<Void> deletePost(@PathVariable Long postId) {
         postService.deletePost(postId);
         return ResponseEntity.ok().build();

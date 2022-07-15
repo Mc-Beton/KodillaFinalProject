@@ -26,7 +26,7 @@ public class RatingController {
         return ResponseEntity.ok(ratingMapper.mapToDtoList(ratingList));
     }
 
-    @GetMapping("{username}/movie/{movieId}")
+    @GetMapping("/{username}/movie/{movieId}")
     public ResponseEntity<RatingDto> getUserRatingForMovie(@PathVariable String username, @PathVariable String movieId) throws RatingNotFoundException {
         return ResponseEntity.ok(ratingMapper.mapToRatingDto(ratingService.getRatingByUserAndMovie(movieId, username)));
     }
@@ -36,7 +36,7 @@ public class RatingController {
         return ResponseEntity.ok(ratingMapper.mapToDtoList(ratingService.getRatingsByMovie(movieId)));
     }
 
-    @GetMapping("{ratingId}")
+    @GetMapping("/{ratingId}")
     public ResponseEntity<RatingDto> getRatingById(@PathVariable Long ratingId) throws RatingNotFoundException {
         return ResponseEntity.ok(ratingMapper.mapToRatingDto(ratingService.getRatingById(ratingId)));
     }
@@ -48,7 +48,7 @@ public class RatingController {
         return ResponseEntity.ok().build();
     }
 
-    @DeleteMapping("delete/{ratingId}")
+    @DeleteMapping("/delete/{ratingId}")
     public ResponseEntity<Void> deleteRating(@PathVariable Long ratingId) {
         ratingService.deleteRating(ratingId);
         return ResponseEntity.ok().build();

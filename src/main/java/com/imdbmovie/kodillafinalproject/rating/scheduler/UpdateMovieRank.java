@@ -16,6 +16,7 @@ public class UpdateMovieRank {
 
     @Scheduled(cron = "0 0 * * * *")
     public void updateAllMovieRanks() {
+        ratingService.clearAvgRatings();
         List<Rating> ratingsList = ratingService.getAllRatings();
         List<String> ratedMovies = ratingsList.stream()
                 .map(Rating::getMovieId)
