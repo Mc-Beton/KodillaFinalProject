@@ -1,5 +1,6 @@
 package com.imdbmovie.kodillafinalproject.user.controller;
 
+import com.imdbmovie.kodillafinalproject.exceptions.UserWithUsernameExistsException;
 import com.imdbmovie.kodillafinalproject.imdbMovie.client.IMBDClient;
 import com.imdbmovie.kodillafinalproject.imdbMovie.domain.ImdbMovieDto;
 import com.imdbmovie.kodillafinalproject.user.domain.User;
@@ -7,6 +8,7 @@ import com.imdbmovie.kodillafinalproject.user.domain.UserDto;
 import com.imdbmovie.kodillafinalproject.exceptions.UserNotFoundException;
 import com.imdbmovie.kodillafinalproject.user.mapper.UserMapper;
 import com.imdbmovie.kodillafinalproject.user.service.UserService;
+import com.imdbmovie.kodillafinalproject.user.userFacade.UserFacade;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -23,6 +25,7 @@ public class UserController {
     private final UserService userService;
     private final UserMapper userMapper;
     private final IMBDClient imbdClient;
+    private final UserFacade userFacade;
 
 
     @GetMapping("/all-users/{name}")
@@ -32,9 +35,8 @@ public class UserController {
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Void> makeNewUser(@RequestBody UserDto userDto) {
-        User user = userMapper.mapToUserWithId(userDto);
-        userService.saveNewUser(user);
+    public ResponseEntity<Void> makeNewUser(@RequestBody UserDto userDto) throws UserWithUsernameExistsException {
+        userFacade.createNewUserFacade(userDto);
         return ResponseEntity.ok().build();
     }
 

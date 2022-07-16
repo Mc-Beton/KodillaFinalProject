@@ -23,4 +23,9 @@ public class GlobalHttpErrorHandler extends ResponseEntityExceptionHandler {
     public ResponseEntity<Object> ratingNotFoundHandler(PostNotFoundException e) {
         return new ResponseEntity<>("Post doesn't exist", HttpStatus.BAD_REQUEST);
     }
+
+    @ExceptionHandler(UserWithUsernameExistsException.class)
+    public ResponseEntity<Object> usernameUsedException(UserWithUsernameExistsException e) {
+        return new ResponseEntity<>("Username in use, pick another username", HttpStatus.BAD_REQUEST);
+    }
 }

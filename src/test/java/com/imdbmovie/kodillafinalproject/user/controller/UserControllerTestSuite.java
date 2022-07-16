@@ -8,6 +8,7 @@ import com.imdbmovie.kodillafinalproject.user.domain.User;
 import com.imdbmovie.kodillafinalproject.user.domain.UserDto;
 import com.imdbmovie.kodillafinalproject.user.mapper.UserMapper;
 import com.imdbmovie.kodillafinalproject.user.service.UserService;
+import com.imdbmovie.kodillafinalproject.user.userFacade.UserFacade;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,6 +46,9 @@ class UserControllerTestSuite {
     @MockBean
     private IMBDClient imbdClient;
 
+    @MockBean
+    private UserFacade userFacade;
+
     @Test
     void createUserTest() throws Exception {
         //Given
@@ -62,8 +66,7 @@ class UserControllerTestSuite {
         Gson gson = new Gson();
         String jsonContent = gson.toJson(userDto);
 
-        when(mapper.mapToUserWithId(userDto)).thenReturn(users);
-        when(service.saveNewUser(users)).thenReturn(users);
+        when(userFacade.createNewUserFacade(userDto)).thenReturn(users);
 
         //When & Then
         mockMvc.perform(MockMvcRequestBuilders
