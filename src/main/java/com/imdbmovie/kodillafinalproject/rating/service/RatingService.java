@@ -33,8 +33,10 @@ public class RatingService {
     }
 
     public Rating getRatingById(Long id) throws RatingNotFoundException {
-        Optional<Rating> rating = Optional.of(ratingRepository.findById(id).get());
-        return rating.get();
+        if (ratingRepository.findById(id).isPresent())
+            return ratingRepository.findById(id).get();
+        else
+            throw new RatingNotFoundException();
     }
 
     public Rating getRatingByUserAndMovie(String movieId, String username) throws RatingNotFoundException {

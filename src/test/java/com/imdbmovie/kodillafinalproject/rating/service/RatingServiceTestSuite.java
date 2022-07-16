@@ -1,12 +1,15 @@
 package com.imdbmovie.kodillafinalproject.rating.service;
 
 import com.imdbmovie.kodillafinalproject.exceptions.RatingNotFoundException;
+import com.imdbmovie.kodillafinalproject.exceptions.UserNotFoundException;
 import com.imdbmovie.kodillafinalproject.rating.domain.AverageRating;
 import com.imdbmovie.kodillafinalproject.rating.domain.Rating;
 import com.imdbmovie.kodillafinalproject.rating.domain.dto.RatingDto;
 import com.imdbmovie.kodillafinalproject.rating.mapper.RatingMapper;
+import com.imdbmovie.kodillafinalproject.rating.scheduler.UpdateMovieRank;
 import com.imdbmovie.kodillafinalproject.user.domain.User;
 import com.imdbmovie.kodillafinalproject.user.service.UserService;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -26,6 +29,9 @@ class RatingServiceTestSuite {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private UpdateMovieRank updateMovieRank;
 
     @Test
     void saveNewUserRatingTest() {
@@ -256,7 +262,7 @@ class RatingServiceTestSuite {
     }
 
     @Test
-    void shouldMapToRatingTest() {
+    void shouldMapToRatingTest() throws UserNotFoundException {
         //Given
         User user = new User.UserBuilder()
                 .name("name")
@@ -278,5 +284,72 @@ class RatingServiceTestSuite {
 
         //Clean up
         userService.deleteUser(user.getId());
+    }
+
+    @Test
+    void shouldUpdateAvgRatingsTest() {
+        //Given
+        User user = new User.UserBuilder()
+                .name("name")
+                .surname("surname1")
+                .username("username1")
+                .password("password")
+                .phoneNumber("24321545")
+                .email("asdfadsg")
+                .build();
+
+        User user2 = new User.UserBuilder()
+                .name("name")
+                .surname("surname1")
+                .username("username2")
+                .password("password")
+                .phoneNumber("24321545")
+                .email("asdfadsg")
+                .build();
+
+        User user3 = new User.UserBuilder()
+                .name("name")
+                .surname("surname1")
+                .username("username3")
+                .password("password")
+                .phoneNumber("24321545")
+                .email("asdfadsg")
+                .build();
+
+        userService.saveNewUser(user);
+        userService.saveNewUser(user2);
+        userService.saveNewUser(user3);
+        Rating rating = new Rating("tt123456", user, 6);
+        Rating rating1 = new Rating("tt123456", user2,5);
+        Rating rating2 = new Rating("tt132456", user3, 8);
+
+        ratingService.saveNewRating(rating);
+        ratingService.saveNewRating(rating1);
+        ratingService.saveNewRating(rating2);
+
+        //When
+        updateMovieRank.updateAllMovieRanks();
+
+        //Then
+        assertEquals(5.5, ratingService.getAvgRatingOfMovie("tt123456").getAverageRate());
+        assertEquals(8, ratingService.getAvgRatingOfMovie("tt132456").getAverageRate());
+
+        //Clean up
+        ratingService.deleteRating(rating.getId());
+        ratingService.deleteRating(rating1.getId());
+        ratingService.deleteRating(rating2.getId());
+        userService.deleteUser(user.getId());
+        userService.deleteUser(user2.getId());
+        userService.deleteUser(user3.getId());
+        ratingService.clearAvgRatings();
+    }
+
+    @Test
+    void shouldThrowRatingNotFoundExceptionTest() throws RatingNotFoundException{
+        //Given
+        //When & Then
+        RatingNotFoundException thrown = Assertions.assertThrows(RatingNotFoundException.class, () -> {
+            ratingService.getRatingById(1L);
+        });
     }
 }

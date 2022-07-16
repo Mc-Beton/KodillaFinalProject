@@ -1,5 +1,7 @@
 package com.imdbmovie.kodillafinalproject.post.controller;
 
+import com.imdbmovie.kodillafinalproject.exceptions.PostNotFoundException;
+import com.imdbmovie.kodillafinalproject.exceptions.UserNotFoundException;
 import com.imdbmovie.kodillafinalproject.post.domain.Post;
 import com.imdbmovie.kodillafinalproject.post.domain.PostDto;
 import com.imdbmovie.kodillafinalproject.post.mapper.PostMapper;
@@ -31,8 +33,13 @@ public class PostController {
         return ResponseEntity.ok(postMapper.mapToPostDtoList(postList));
     }
 
+    @GetMapping("/byId/{postId}")
+    public ResponseEntity<PostDto> getPostById(@PathVariable Long postId) throws PostNotFoundException {
+        return ResponseEntity.ok(postMapper.mapToPostDto(postService.getPostById(postId)));
+    }
+
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Void> addNewPost(@RequestBody PostDto postDto) {
+    public ResponseEntity<Void> addNewPost(@RequestBody PostDto postDto) throws UserNotFoundException {
         Post post = postMapper.mapToPost(postDto);
         postService.createNewPostToMovieByUser(post);
         return ResponseEntity.ok().build();

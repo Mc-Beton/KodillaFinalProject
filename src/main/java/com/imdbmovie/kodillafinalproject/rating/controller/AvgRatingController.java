@@ -18,7 +18,7 @@ public class AvgRatingController {
     private final RatingService ratingService;
     private final AverageRatingMapper mapper;
 
-    @GetMapping("{movieId}")
+    @GetMapping("/{movieId}")
     public ResponseEntity<AverageRatingDto> getAvgRatingOfMovie(@PathVariable String movieId) {
         return ResponseEntity.ok(mapper.mapToAvgRatingDto(ratingService.getAvgRatingOfMovie(movieId)));
     }

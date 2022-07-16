@@ -1,6 +1,5 @@
 package com.imdbmovie.kodillafinalproject.rating.domain;
 
-import com.imdbmovie.kodillafinalproject.user.domain.User;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

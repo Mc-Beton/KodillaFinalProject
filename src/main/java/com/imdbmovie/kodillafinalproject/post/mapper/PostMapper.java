@@ -1,5 +1,6 @@
 package com.imdbmovie.kodillafinalproject.post.mapper;
 
+import com.imdbmovie.kodillafinalproject.exceptions.UserNotFoundException;
 import com.imdbmovie.kodillafinalproject.post.domain.Post;
 import com.imdbmovie.kodillafinalproject.post.domain.PostDto;
 import com.imdbmovie.kodillafinalproject.user.service.UserService;
@@ -18,7 +19,7 @@ public class PostMapper {
         this.userService = userService;
     }
 
-    public Post mapToPost(PostDto postDto) {
+    public Post mapToPost(PostDto postDto) throws UserNotFoundException {
         return new Post(
                 postDto.getMovieId(),
                 userService.getUserByUsername(postDto.getUsername()),

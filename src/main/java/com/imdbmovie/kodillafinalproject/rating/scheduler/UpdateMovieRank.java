@@ -5,10 +5,12 @@ import com.imdbmovie.kodillafinalproject.rating.domain.Rating;
 import com.imdbmovie.kodillafinalproject.rating.service.RatingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Component
 public class UpdateMovieRank {
 
     @Autowired

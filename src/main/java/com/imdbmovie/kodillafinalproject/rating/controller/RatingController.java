@@ -1,5 +1,6 @@
 package com.imdbmovie.kodillafinalproject.rating.controller;
 
+import com.imdbmovie.kodillafinalproject.exceptions.UserNotFoundException;
 import com.imdbmovie.kodillafinalproject.rating.domain.Rating;
 import com.imdbmovie.kodillafinalproject.rating.domain.dto.RatingDto;
 import com.imdbmovie.kodillafinalproject.exceptions.RatingNotFoundException;
@@ -42,7 +43,7 @@ public class RatingController {
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Void> addNewRating(@RequestBody RatingDto ratingDto) {
+    public ResponseEntity<Void> addNewRating(@RequestBody RatingDto ratingDto) throws UserNotFoundException {
         Rating rating = ratingMapper.mapToRating(ratingDto);
         ratingService.saveNewRating(rating);
         return ResponseEntity.ok().build();

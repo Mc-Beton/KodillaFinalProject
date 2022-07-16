@@ -1,10 +1,14 @@
 package com.imdbmovie.kodillafinalproject.user.service;
 
 import com.imdbmovie.kodillafinalproject.exceptions.UserNotFoundException;
+import com.imdbmovie.kodillafinalproject.exceptions.UserWithUsernameExistsException;
 import com.imdbmovie.kodillafinalproject.user.domain.User;
 import com.imdbmovie.kodillafinalproject.user.domain.UserDto;
 import com.imdbmovie.kodillafinalproject.user.mapper.UserMapper;
+import com.imdbmovie.kodillafinalproject.user.userFacade.UserFacade;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.function.Executable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -22,8 +26,11 @@ class UserServiceTestSuite {
     @Autowired
     private UserMapper userMapper;
 
+    @Autowired
+    private UserFacade userFacade;
+
     @Test
-    void addNewUserTest() {
+    void addNewUserTest() throws UserNotFoundException {
         //Given
         User user = new User.UserBuilder()
                 .id(1L)
@@ -229,7 +236,7 @@ class UserServiceTestSuite {
     }
 
     @Test
-    void shouldSaveNewUserFromUserDto() {
+    void shouldSaveNewUserFromUserDto() throws UserNotFoundException {
         //Given
         UserDto userDto = new UserDto( "name", "surname1", "username", "password", "24321545", "asdfadsg");
 
@@ -276,5 +283,31 @@ class UserServiceTestSuite {
         //Clean up
         userService.deleteUser(user.getId());
         userService.deleteUser(user2.getId());
+    }
+
+    @Test
+    void shouldThrowCreateExceptionTest() throws UserWithUsernameExistsException, UserNotFoundException {
+        //Given
+        UserDto userDto = new UserDto( "name", "surname1", "username", "password", "24321545", "asdfadsg");
+        userFacade.createNewUserFacade(userDto);
+
+        UserDto userDto2 = new UserDto( "name2", "surname2", "username", "password2", "2352346", "asgdag");
+
+        //When & Then
+        UserWithUsernameExistsException thrown = Assertions.assertThrows(UserWithUsernameExistsException.class, () -> {
+            userFacade.createNewUserFacade(userDto2);
+        });
+
+        //Clean up
+        userService.deleteUser(userService.getUserByUsername(userDto.getUsername()).getId());
+    }
+
+    @Test
+    void shouldThrowUserNotFoundExceptionTest() throws UserNotFoundException {
+        //Given
+        //When & Then
+        UserNotFoundException thrown = Assertions.assertThrows(UserNotFoundException.class, () -> {
+            userService.getUserByUsername("username");
+        });
     }
 }

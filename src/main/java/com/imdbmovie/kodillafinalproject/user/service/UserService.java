@@ -27,8 +27,11 @@ public class UserService {
         return userRepository.findUserById(id).get();
     }
 
-    public User getUserByUsername(String username) {
-        return userRepository.findByUsername(username).get();
+    public User getUserByUsername(String username) throws UserNotFoundException {
+        if (userRepository.findByUsername(username).isPresent())
+            return userRepository.findByUsername(username).get();
+        else
+            throw new UserNotFoundException();
     }
 
     public void deleteUser(Long id) {

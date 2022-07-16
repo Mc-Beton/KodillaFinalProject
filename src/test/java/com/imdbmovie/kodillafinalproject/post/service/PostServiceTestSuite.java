@@ -1,10 +1,13 @@
 package com.imdbmovie.kodillafinalproject.post.service;
 
+import com.imdbmovie.kodillafinalproject.exceptions.PostNotFoundException;
+import com.imdbmovie.kodillafinalproject.exceptions.UserNotFoundException;
 import com.imdbmovie.kodillafinalproject.post.domain.Post;
 import com.imdbmovie.kodillafinalproject.post.domain.PostDto;
 import com.imdbmovie.kodillafinalproject.post.mapper.PostMapper;
 import com.imdbmovie.kodillafinalproject.user.domain.User;
 import com.imdbmovie.kodillafinalproject.user.service.UserService;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -48,6 +51,33 @@ class PostServiceTestSuite {
 
         //Clean up
         postService.deletePost(post.getId());
+        userService.deleteUser(user.getId());
+    }
+
+    @Test
+    void getPostByIdTest() throws PostNotFoundException {
+        //given
+        User user = new User.UserBuilder()
+                .name("name")
+                .surname("surname1")
+                .username("username")
+                .password("password")
+                .phoneNumber("24321545")
+                .email("asdfadsg")
+                .build();
+
+        userService.saveNewUser(user);
+
+        //When
+        Post post = new Post("tt123456", user, "Content");
+        postService.createNewPostToMovieByUser(post);
+        Long postId = post.getId();
+
+        //Then
+        assertEquals(post.getContent(), postService.getPostById(postId).getContent());
+
+        //Clean up
+        postService.deletePost(postId);
         userService.deleteUser(user.getId());
     }
 
@@ -106,7 +136,7 @@ class PostServiceTestSuite {
     }
 
     @Test
-    void shouldMapToPostTest() {
+    void shouldMapToPostTest() throws UserNotFoundException {
         //Given
         PostDto postDto = new PostDto("tt123456", "username", "content");
         User user = new User.UserBuilder()
@@ -150,5 +180,14 @@ class PostServiceTestSuite {
 
         //Then
         assertEquals(postDtos.size(), 1);
+    }
+
+    @Test
+    void shouldThrowPostNotFoundExceptionTest() throws PostNotFoundException {
+        //Given
+        //When & Then
+        PostNotFoundException thrown = Assertions.assertThrows(PostNotFoundException.class, () ->{
+            postService.getPostById(1L);
+        });
     }
 }

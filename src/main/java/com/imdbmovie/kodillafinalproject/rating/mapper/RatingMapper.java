@@ -1,5 +1,6 @@
 package com.imdbmovie.kodillafinalproject.rating.mapper;
 
+import com.imdbmovie.kodillafinalproject.exceptions.UserNotFoundException;
 import com.imdbmovie.kodillafinalproject.rating.domain.Rating;
 import com.imdbmovie.kodillafinalproject.rating.domain.dto.RatingDto;
 import com.imdbmovie.kodillafinalproject.user.service.UserService;
@@ -17,7 +18,7 @@ public class RatingMapper {
         this.userService = userService;
     }
 
-    public Rating mapToRating(RatingDto ratingDto) {
+    public Rating mapToRating(RatingDto ratingDto) throws UserNotFoundException {
         return new Rating(
                 ratingDto.getMovieId(),
                 userService.getUserByUsername(ratingDto.getUsername()),
