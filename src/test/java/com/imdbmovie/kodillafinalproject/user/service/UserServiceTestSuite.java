@@ -53,6 +53,28 @@ class UserServiceTestSuite {
     }
 
     @Test
+    void getUserByUserNameTest() throws UserNotFoundException {
+        //Given
+        User user = new User.UserBuilder()
+                .name("name")
+                .surname("surname1")
+                .username("username")
+                .password("password")
+                .phoneNumber("24321545")
+                .email("asdfadsg")
+                .build();
+
+        //When
+        userService.saveNewUser(user);
+
+        //Then
+        assertEquals(userService.getUserByUsername("username").getName(), user.getName());
+
+        //Clean up
+        userService.deleteUser(user.getId());
+    }
+
+    @Test
     void getAllUsersTest() {
         //Given
         User user = new User.UserBuilder()

@@ -27,6 +27,11 @@ public class UserController {
     private final IMBDClient imbdClient;
     private final UserFacade userFacade;
 
+    @GetMapping("/getUserDataLogin/{username}")
+    public ResponseEntity<UserDto> getUserToLogin(@PathVariable String username) throws UserNotFoundException {
+        User user = userService.getUserByUsername(username);
+        return ResponseEntity.ok(userMapper.mapToUserDto(user));
+    }
 
     @GetMapping("/all-users/{name}")
     public ResponseEntity<List<UserDto>> getAllUsersByName(@PathVariable String name) {
@@ -70,24 +75,24 @@ public class UserController {
     }
 
     @PutMapping(value = "/{userId}/addMovieToFav/{movieId}")
-    public ResponseEntity<Void> addMovieToFavorite(@PathVariable Long userId, @PathVariable String movieId) throws UserNotFoundException {
-        userService.addMovieToFavorite(userId, movieId);
+    public ResponseEntity<Void> addMovieToFavorite(@PathVariable String userId, @PathVariable String movieId) throws UserNotFoundException {
+        userService.addMovieToFavorite(userService.getUserByUsername(userId).getId(), movieId);
         return ResponseEntity.ok().build();
     }
 
     @PutMapping(value = "/{userId}/addMovieToWatch/{movieId}")
-    public ResponseEntity<Void> addMovieToWatch(@PathVariable Long userId, @PathVariable String movieId) throws UserNotFoundException {
-        userService.addMovieToFWatch(userId, movieId);
+    public ResponseEntity<Void> addMovieToWatch(@PathVariable String userId, @PathVariable String movieId) throws UserNotFoundException {
+        userService.addMovieToFWatch(userService.getUserByUsername(userId).getId(), movieId);
         return ResponseEntity.ok().build();
     }
 
     @GetMapping(value = "/{userId}/favoriteList")
-    public ResponseEntity<List<ImdbMovieDto>> getFavoriteList(@PathVariable Long userId) throws UserNotFoundException {
-        return ResponseEntity.ok(imbdClient.getUserMovieList(userService.getFavMovieList(userId)));
+    public ResponseEntity<List<ImdbMovieDto>> getFavoriteList(@PathVariable String userId) throws UserNotFoundException {
+        return ResponseEntity.ok(imbdClient.getUserMovieList(userService.getUserByUsername(userId).getFavoriteList()));
     }
 
     @GetMapping(value = "/{userId}/toWatchList")
-    public ResponseEntity<List<ImdbMovieDto>> getToWatchList(@PathVariable Long userId) throws UserNotFoundException {
-        return ResponseEntity.ok(imbdClient.getUserMovieList(userService.getToWatchMovieList(userId)));
+    public ResponseEntity<List<ImdbMovieDto>> getToWatchList(@PathVariable String userId) throws UserNotFoundException {
+        return ResponseEntity.ok(imbdClient.getUserMovieList(userService.getUserByUsername(userId).getToWatchList()));
     }
 }

@@ -108,8 +108,8 @@ public class UserService {
         }
     }
 
-    public Set<String> getFavMovieList(Long userId) throws UserNotFoundException {
-        Optional<User> user = Optional.ofNullable(getUserById(userId));
+    public Set<String> getFavMovieList(String userId) throws UserNotFoundException {
+        Optional<User> user = Optional.ofNullable(getUserByUsername(userId));
         if (user.isPresent()) {
             if (user.get().getFavoriteList().isEmpty()) {
                 return new HashSet<>();
@@ -121,8 +121,8 @@ public class UserService {
         }
     }
 
-    public Set<String> getToWatchMovieList(Long userId) throws UserNotFoundException {
-        Optional<User> user = Optional.ofNullable(getUserById(userId));
+    public Set<String> getToWatchMovieList(String userId) throws UserNotFoundException {
+        Optional<User> user = Optional.ofNullable(getUserByUsername(userId));
         if (user.isPresent()) {
             if (user.get().getToWatchList().isEmpty()) {
                 return new HashSet<>();
