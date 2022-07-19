@@ -9,12 +9,6 @@ import lombok.NoArgsConstructor;
 @Getter
 public class AverageRatingDto {
 
-    private Long id;
     private String movieId;
     private double averageRating;
-
-    public AverageRatingDto(String movieId, double averageRating) {
-        this.movieId = movieId;
-        this.averageRating = averageRating;
-    }
 }

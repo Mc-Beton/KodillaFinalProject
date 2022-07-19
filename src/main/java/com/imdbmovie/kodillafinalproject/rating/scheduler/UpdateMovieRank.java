@@ -16,7 +16,7 @@ public class UpdateMovieRank {
     @Autowired
     private RatingService ratingService;
 
-    @Scheduled(cron = "0 0 * * * *")
+    @Scheduled(fixedDelay = 100000)
     public void updateAllMovieRanks() {
         ratingService.clearAvgRatings();
         List<Rating> ratingsList = ratingService.getAllRatings();
@@ -27,7 +27,8 @@ public class UpdateMovieRank {
 
         ratedMovies
                 .forEach(m -> {
-                    ratingService.saveNewCalculation(new AverageRating(m, ratingService.calculateAvgRating(m)));
+                    double rate = ratingService.calculateAvgRating(m);
+                    ratingService.saveNewCalculation(new AverageRating(m, rate));
                 });
     }
 }

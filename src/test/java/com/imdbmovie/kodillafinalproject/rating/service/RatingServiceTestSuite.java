@@ -215,7 +215,7 @@ class RatingServiceTestSuite {
     void shouldGiveZeroIfMovieNotRatedTest() {
         //Given
         //When & Then
-        assertEquals(0.0, ratingService.getAvgRatingOfMovie("tt123456").getAverageRate());
+        assertEquals(0.0, ratingService.getAvgRatingOfMovie("tt123457").getAverageRate());
     }
 
     @Test

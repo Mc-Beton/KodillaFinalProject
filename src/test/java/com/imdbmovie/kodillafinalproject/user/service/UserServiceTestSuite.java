@@ -199,7 +199,7 @@ class UserServiceTestSuite {
         userService.addMovieToFavorite(id,"tt23521431");
 
         //Then
-        assertEquals(2, userService.getFavMovieList(id).size());
+        assertEquals(2, userService.getFavMovieList("username").size());
 
         //Clean up
         userService.deleteUser(id);
@@ -226,7 +226,7 @@ class UserServiceTestSuite {
         userService.addMovieToFWatch(id,"tt23521431");
 
         //Then
-        assertEquals(2, userService.getToWatchMovieList(id).size());
+        assertEquals(2, userService.getToWatchMovieList("username").size());
 
         //Clean up
         userService.deleteUser(id);
