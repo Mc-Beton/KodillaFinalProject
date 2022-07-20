@@ -72,11 +72,12 @@ public class IMBDClient {
     }
 
     public ImbdMovieDetailsDto getMovieDetailsImbd(String movieId) {
+        String urlToEncode = imbdApiEndpoint +"Title/" + imbdKey + "/" + movieId;
         URI url = UriComponentsBuilder
-                .fromHttpUrl(imbdApiEndpoint +"Title/" + imbdKey + "/" + movieId)
+                .fromHttpUrl(urlToEncode)
                 .build().encode().toUri();
 
-        return restTemplate.getForObject(url, ImbdMovieDetailsDto.class);
+        return restTemplate.getForObject(urlToEncode, ImbdMovieDetailsDto.class);
     }
 
     public List<ImdbMovieDto> searchMovies(String queryContent) {
