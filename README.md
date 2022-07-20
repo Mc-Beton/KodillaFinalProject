@@ -198,6 +198,6 @@ For the BackEnd part I'll be continuing my works to add/fix these features (due 
 * add JWT Authentication
 * divide the project into microservices
 
-For the FrontEnd, well to be honest I am not that really interested to add many features, just editing it to make it work together with the backEnd while I'll be upgrading it.
+For the FrontEnd, well to be honest I am not that really interested in adding many features. Well maybe clean it up a bit, seems a real mess in there (running out of time). Changes will be provided to let it work together with backend upgrades.
 
 
