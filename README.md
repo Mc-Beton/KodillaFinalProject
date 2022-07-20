@@ -35,6 +35,7 @@ BackEnd:
 * Gradle
 * JUnit/Jupiter
 * MySQL 
+* Scheduler
 * access to IMDB API
 * access to UTELLY API
 
